@@ -4,7 +4,6 @@ import * as SplashScreen from "expo-splash-screen";
 
 import React from "react";
 import {
-  ImageBackground,
   StyleSheet,
   View,
   TextInput,
@@ -14,6 +13,8 @@ import {
   Platform,
   Text,
   TouchableOpacity,
+  Dimensions,
+  Image,
 } from "react-native";
 
 const initialState = {
@@ -21,6 +22,8 @@ const initialState = {
   email: "",
   password: "",
 };
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
 
 export const RegistrationScreen = () => {
   const [isShowPassword, setIsShowPassword] = useState(true);
@@ -58,81 +61,84 @@ export const RegistrationScreen = () => {
 
   return (
     <View style={styles.container}>
-      <ImageBackground
+      <Image
         source={require("../assets/images/RegistrationBG.jpg")}
-        style={styles.image}
+        style={{
+          width: windowWidth,
+          height: windowHeight,
+          position: "absolute",
+          top: 0,
+          left: 0,
+        }}
+      />
+      <TouchableWithoutFeedback
+        onPress={() => Keyboard.dismiss()}
+        onLayout={onLayoutRootView}
       >
-        <TouchableWithoutFeedback
-          onPress={() => Keyboard.dismiss()}
-          onLayout={onLayoutRootView}
-        >
-          <View style={styles.regContainer}>
-            <KeyboardAvoidingView
-              behavior={Platform.OS == "ios" ? "padding" : "height"}
-            >
-              <View style={styles.inputsContainer}>
-                <View style={styles.img_placeholder}>
-                  <TouchableOpacity>
-                    <View style={styles.img_plhrd_circle}>
-                      <View style={styles.img_plhrd_1}></View>
-                      <View style={styles.img_plhrd_2}></View>
-                    </View>
-                  </TouchableOpacity>
-                </View>
-                <Text style={styles.title}>Регистрация</Text>
-                <TextInput
-                  value={credentials.login}
-                  onChangeText={loginHandler}
-                  placeholder="Логин"
-                  placeholderTextColor="#BDBDBD"
-                  style={styles.input}
-                  onFocus={() => setIsShowKeyboard(true)}
-                  onBlur={() => setIsShowKeyboard(false)}
-                />
-                <TextInput
-                  value={credentials.email}
-                  onChangeText={emailHandler}
-                  placeholder="Адрес электронной почты"
-                  placeholderTextColor="#BDBDBD"
-                  style={styles.input}
-                  onFocus={() => setIsShowKeyboard(true)}
-                  onBlur={() => setIsShowKeyboard(false)}
-                />
-                <View>
-                  <TextInput
-                    value={credentials.password}
-                    onChangeText={passwordHandler}
-                    placeholder="Пароль"
-                    placeholderTextColor="#BDBDBD"
-                    secureTextEntry={isShowPassword}
-                    style={styles.input}
-                    onFocus={() => setIsShowKeyboard(true)}
-                    onBlur={() => setIsShowKeyboard(false)}
-                  />
-                  <TouchableOpacity
-                    style={styles.input_btn}
-                    onPress={showPassword}
-                  >
-                    <Text style={styles.input__text}>Показать</Text>
-                  </TouchableOpacity>
-                </View>
+        <View style={styles.regContainer}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS == "ios" ? "padding" : "height"}
+          >
+            <View style={styles.inputsContainer}>
+              <View style={styles.img_placeholder}>
+                <TouchableOpacity>
+                  <View style={styles.img_plhrd_circle}>
+                    <View style={styles.img_plhrd_1}></View>
+                    <View style={styles.img_plhrd_2}></View>
+                  </View>
+                </TouchableOpacity>
               </View>
-              {isShowKeyboard ? null : (
-                <View>
-                  <TouchableOpacity style={styles.btn} onPress={onLogin}>
-                    <Text style={styles.btn__text}>Зарегистрироваться</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.link}>
-                    <Text style={styles.link__text}>
-                      Уже есть аккаунт? Войти
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              )}
-            </KeyboardAvoidingView>
-          </View>
-        </TouchableWithoutFeedback>
-      </ImageBackground>
+              <Text style={styles.title}>Регистрация</Text>
+              <TextInput
+                value={credentials.login}
+                onChangeText={loginHandler}
+                placeholder="Логин"
+                placeholderTextColor="#BDBDBD"
+                style={styles.input}
+                onFocus={() => setIsShowKeyboard(true)}
+                onBlur={() => setIsShowKeyboard(false)}
+              />
+              <TextInput
+                value={credentials.email}
+                onChangeText={emailHandler}
+                placeholder="Адрес электронной почты"
+                placeholderTextColor="#BDBDBD"
+                style={styles.input}
+                onFocus={() => setIsShowKeyboard(true)}
+                onBlur={() => setIsShowKeyboard(false)}
+              />
+              <View>
+                <TextInput
+                  value={credentials.password}
+                  onChangeText={passwordHandler}
+                  placeholder="Пароль"
+                  placeholderTextColor="#BDBDBD"
+                  secureTextEntry={isShowPassword}
+                  style={styles.input}
+                  onFocus={() => setIsShowKeyboard(true)}
+                  onBlur={() => setIsShowKeyboard(false)}
+                />
+                <TouchableOpacity
+                  style={styles.input_btn}
+                  onPress={showPassword}
+                >
+                  <Text style={styles.input__text}>Показать</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+            {isShowKeyboard ? null : (
+              <View>
+                <TouchableOpacity style={styles.btn} onPress={onLogin}>
+                  <Text style={styles.btn__text}>Зарегистрироваться</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.link}>
+                  <Text style={styles.link__text}>Уже есть аккаунт? Войти</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </KeyboardAvoidingView>
+        </View>
+      </TouchableWithoutFeedback>
     </View>
   );
 };
@@ -140,12 +146,9 @@ export const RegistrationScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  image: {
-    flex: 1,
-    resizeMode: "cover",
     justifyContent: "flex-end",
   },
+
   regContainer: {
     backgroundColor: "#ffffff",
     borderTopLeftRadius: 25,
