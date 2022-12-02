@@ -1,20 +1,10 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { LoginScreen } from "./Screens/LoginScreen";
+
+import { RegistrationScreen } from "./Screens/RegistrationScreen";
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Hello from PC</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+  // return <RegistrationScreen />;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+  return <LoginScreen />;
+}

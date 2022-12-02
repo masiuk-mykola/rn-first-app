@@ -27,3 +27,7 @@ Start the server
 ```
 
 Scan the QR code above with Expo Go (Android) or the Camera app (iOS)
+
+## Screenshot from Android device
+
+![image](./assets/screensots/androidScreenshot.png)
