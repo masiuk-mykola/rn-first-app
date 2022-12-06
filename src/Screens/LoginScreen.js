@@ -1,10 +1,9 @@
 import { useCallback, useState } from "react";
-import { useFonts } from "expo-font";
+// import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
 import React from "react";
 import {
-  ImageBackground,
   StyleSheet,
   View,
   TextInput,
@@ -22,45 +21,69 @@ const initialState = {
   email: "",
   password: "",
 };
+
+const warningState = {
+  email: false,
+  password: false,
+};
+
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-export const LoginScreen = () => {
+export const LoginScreen = ({ navigation }) => {
   const [isShowPassword, setIsShowPassword] = useState(true);
   const [credentials, setCredentials] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+  const [isShowWarning, setIsShowWarning] = useState(warningState);
 
-  const [fontsLoaded] = useFonts({
-    "Roboto-400": require("../assets/fonts/Roboto/Roboto-Regular.ttf"),
-    "Roboto-500": require("../assets/fonts/Roboto/Roboto-Medium.ttf"),
-  });
+  // const [fontsLoaded] = useFonts({
+  //   "Roboto-400": require("../../assets/fonts/Roboto/Roboto-Regular.ttf"),
+  //   "Roboto-500": require("../../assets/fonts/Roboto/Roboto-Medium.ttf"),
+  // });
 
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
+  // const onLayoutRootView = useCallback(async () => {
+  //   if (fontsLoaded) {
+  //     await SplashScreen.hideAsync();
+  //   }
+  // }, [fontsLoaded]);
 
-  if (!fontsLoaded) {
-    return null;
-  }
+  // if (!fontsLoaded) {
+  //   return null;
+  // }
 
   const emailHandler = (email) =>
     setCredentials((prevState) => ({ ...prevState, email }));
   const passwordHandler = (password) =>
     setCredentials((prevState) => ({ ...prevState, password }));
 
+  const onFocusKeyboard = () => {
+    setIsShowWarning(warningState);
+    setIsShowKeyboard(true);
+  };
+
   const onLogin = () => {
     console.log(credentials);
+
+    if (credentials.email === "") {
+      setIsShowWarning((prevState) => ({ ...prevState, email: true }));
+    }
+    if (credentials.password === "") {
+      setIsShowWarning((prevState) => ({ ...prevState, password: true }));
+    }
+
     setCredentials(initialState);
     Keyboard.dismiss();
+
+    if (credentials.email !== "" || credentials.password !== "") {
+      navigation.navigate("Home");
+    }
   };
   const showPassword = () => setIsShowPassword(!isShowPassword);
 
   return (
     <View style={styles.container}>
       <Image
-        source={require("../assets/images/RegistrationBG.jpg")}
+        source={require("../../assets/images/RegistrationBG.jpg")}
         style={{
           width: windowWidth,
           height: windowHeight,
@@ -71,7 +94,7 @@ export const LoginScreen = () => {
       />
       <TouchableWithoutFeedback
         onPress={() => Keyboard.dismiss()}
-        onLayout={onLayoutRootView}
+        // onLayout={onLayoutRootView}
       >
         <View style={styles.regContainer}>
           <KeyboardAvoidingView
@@ -83,21 +106,35 @@ export const LoginScreen = () => {
               <TextInput
                 value={credentials.email}
                 onChangeText={emailHandler}
-                placeholder="Адрес электронной почты"
-                placeholderTextColor="#BDBDBD"
-                style={styles.input}
-                onFocus={() => setIsShowKeyboard(true)}
+                placeholder={
+                  isShowWarning.email
+                    ? "Пожалуйста, введите почту"
+                    : "Адрес электронной почты"
+                }
+                placeholderTextColor={
+                  isShowWarning.email ? "#FF6C00" : "#BDBDBD"
+                }
+                style={isShowWarning.email ? styles.warningInput : styles.input}
+                onFocus={onFocusKeyboard}
                 onBlur={() => setIsShowKeyboard(false)}
               />
               <View>
                 <TextInput
                   value={credentials.password}
                   onChangeText={passwordHandler}
-                  placeholder="Пароль"
-                  placeholderTextColor="#BDBDBD"
+                  placeholder={
+                    isShowWarning.email
+                      ? "Пожалуйста, введите пароль"
+                      : "Пароль"
+                  }
                   secureTextEntry={isShowPassword}
-                  style={styles.input}
-                  onFocus={() => setIsShowKeyboard(true)}
+                  placeholderTextColor={
+                    isShowWarning.password ? "#FF6C00" : "#BDBDBD"
+                  }
+                  style={
+                    isShowWarning.password ? styles.warningInput : styles.input
+                  }
+                  onFocus={onFocusKeyboard}
                   onBlur={() => setIsShowKeyboard(false)}
                 />
                 <TouchableOpacity
@@ -115,7 +152,14 @@ export const LoginScreen = () => {
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.link}>
                   <Text style={styles.link__text}>
-                    Нет аккаунта? Зарегистрироваться
+                    Нет аккаунта?{" "}
+                    <Text
+                      style={styles.link__text}
+                      onPress={() => navigation.navigate("RegistrationScreen")}
+                    >
+                      {" "}
+                      Зарегистрироваться
+                    </Text>
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -145,6 +189,19 @@ const styles = StyleSheet.create({
     padding: 16,
     borderWidth: 1,
     borderColor: "#E8E8E8",
+    marginBottom: 16,
+    fontFamily: "Roboto-400",
+    borderRadius: 8,
+    fontSize: 16,
+    lineHeight: 19,
+    backgroundColor: "#F6F6F6",
+    color: "#212121",
+  },
+  warningInput: {
+    height: 50,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: "#FF6C00",
     marginBottom: 16,
     fontFamily: "Roboto-400",
     borderRadius: 8,

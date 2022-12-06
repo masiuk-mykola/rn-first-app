@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { useFonts } from "expo-font";
+// import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
 import React from "react";
@@ -22,28 +22,34 @@ const initialState = {
   email: "",
   password: "",
 };
+const warningState = {
+  login: false,
+  email: false,
+  password: false,
+};
+
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-export const RegistrationScreen = () => {
+export const RegistrationScreen = ({ navigation }) => {
   const [isShowPassword, setIsShowPassword] = useState(true);
   const [credentials, setCredentials] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+  const [isShowWarning, setIsShowWarning] = useState(warningState);
 
-  const [fontsLoaded] = useFonts({
-    "Roboto-400": require("../assets/fonts/Roboto/Roboto-Regular.ttf"),
-    "Roboto-500": require("../assets/fonts/Roboto/Roboto-Medium.ttf"),
-  });
+  // const [fontsLoaded] = useFonts({
+  //   "Roboto-400": require("../../assets/fonts/Roboto/Roboto-Regular.ttf"),
+  //   "Roboto-500": require("../../assets/fonts/Roboto/Roboto-Medium.ttf"),
+  // });
 
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
-
-  if (!fontsLoaded) {
-    return null;
-  }
+  // const onLayoutRootView = useCallback(async () => {
+  //   if (fontsLoaded) {
+  //     await SplashScreen.hideAsync();
+  //   }
+  // }, [fontsLoaded]);
+  // if (!fontsLoaded) {
+  //   return null;
+  // }
 
   const loginHandler = (login) =>
     setCredentials((prevState) => ({ ...prevState, login }));
@@ -52,17 +58,40 @@ export const RegistrationScreen = () => {
   const passwordHandler = (password) =>
     setCredentials((prevState) => ({ ...prevState, password }));
 
+  const onFocusKeyboard = () => {
+    setIsShowWarning(warningState);
+    setIsShowKeyboard(true);
+  };
+
   const onLogin = () => {
     console.log(credentials);
+
+    if (credentials.login === "") {
+      setIsShowWarning((prevState) => ({ ...prevState, login: true }));
+    }
+    if (credentials.email === "") {
+      setIsShowWarning((prevState) => ({ ...prevState, email: true }));
+    }
+    if (credentials.password === "") {
+      setIsShowWarning((prevState) => ({ ...prevState, password: true }));
+    }
+
     setCredentials(initialState);
     Keyboard.dismiss();
+    if (
+      credentials.login !== "" ||
+      credentials.email !== "" ||
+      credentials.password !== ""
+    ) {
+      navigation.navigate("Home");
+    }
   };
   const showPassword = () => setIsShowPassword(!isShowPassword);
 
   return (
     <View style={styles.container}>
       <Image
-        source={require("../assets/images/RegistrationBG.jpg")}
+        source={require("../../assets/images/RegistrationBG.jpg")}
         style={{
           width: windowWidth,
           height: windowHeight,
@@ -73,7 +102,7 @@ export const RegistrationScreen = () => {
       />
       <TouchableWithoutFeedback
         onPress={() => Keyboard.dismiss()}
-        onLayout={onLayoutRootView}
+        // onLayout={onLayoutRootView}
       >
         <View style={styles.regContainer}>
           <KeyboardAvoidingView
@@ -92,30 +121,50 @@ export const RegistrationScreen = () => {
               <TextInput
                 value={credentials.login}
                 onChangeText={loginHandler}
-                placeholder="Логин"
-                placeholderTextColor="#BDBDBD"
-                style={styles.input}
-                onFocus={() => setIsShowKeyboard(true)}
+                placeholder={
+                  isShowWarning.password
+                    ? "Пожалуйста, введтите логин"
+                    : "Логин"
+                }
+                placeholderTextColor={
+                  isShowWarning.login ? "#FF6C00" : "#BDBDBD"
+                }
+                style={isShowWarning.login ? styles.warningInput : styles.input}
+                onFocus={onFocusKeyboard}
                 onBlur={() => setIsShowKeyboard(false)}
               />
               <TextInput
                 value={credentials.email}
                 onChangeText={emailHandler}
-                placeholder="Адрес электронной почты"
-                placeholderTextColor="#BDBDBD"
-                style={styles.input}
-                onFocus={() => setIsShowKeyboard(true)}
+                placeholder={
+                  isShowWarning.password
+                    ? "Пожалуйста, введтите почту"
+                    : "Адрес электронной почты"
+                }
+                placeholderTextColor={
+                  isShowWarning.email ? "#FF6C00" : "#BDBDBD"
+                }
+                style={isShowWarning.email ? styles.warningInput : styles.input}
+                onFocus={onFocusKeyboard}
                 onBlur={() => setIsShowKeyboard(false)}
               />
               <View>
                 <TextInput
                   value={credentials.password}
                   onChangeText={passwordHandler}
-                  placeholder="Пароль"
-                  placeholderTextColor="#BDBDBD"
+                  placeholder={
+                    isShowWarning.password
+                      ? "Пожалуйста, введтите пароль"
+                      : "Пароль"
+                  }
                   secureTextEntry={isShowPassword}
-                  style={styles.input}
-                  onFocus={() => setIsShowKeyboard(true)}
+                  placeholderTextColor={
+                    isShowWarning.password ? "#FF6C00" : "#BDBDBD"
+                  }
+                  style={
+                    isShowWarning.password ? styles.warningInput : styles.input
+                  }
+                  onFocus={onFocusKeyboard}
                   onBlur={() => setIsShowKeyboard(false)}
                 />
                 <TouchableOpacity
@@ -132,7 +181,16 @@ export const RegistrationScreen = () => {
                   <Text style={styles.btn__text}>Зарегистрироваться</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.link}>
-                  <Text style={styles.link__text}>Уже есть аккаунт? Войти</Text>
+                  <Text style={styles.link__text}>
+                    Уже есть аккаунт?
+                    <Text
+                      style={styles.link__text}
+                      onPress={() => navigation.navigate("LoginScreen")}
+                    >
+                      {" "}
+                      Войти
+                    </Text>
+                  </Text>
                 </TouchableOpacity>
               </View>
             )}
@@ -161,6 +219,19 @@ const styles = StyleSheet.create({
     padding: 16,
     borderWidth: 1,
     borderColor: "#E8E8E8",
+    marginBottom: 16,
+    fontFamily: "Roboto-400",
+    borderRadius: 8,
+    fontSize: 16,
+    lineHeight: 19,
+    backgroundColor: "#F6F6F6",
+    color: "#212121",
+  },
+  warningInput: {
+    height: 50,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: "#FF6C00",
     marginBottom: 16,
     fontFamily: "Roboto-400",
     borderRadius: 8,
