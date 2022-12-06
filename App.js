@@ -1,7 +1,12 @@
 import React, { useCallback } from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { authorization } from "./src/components/authorization";
 import { useFonts } from "expo-font";
+import { createStackNavigator } from "@react-navigation/stack";
+import { LoginScreen } from "./src/Screens/LoginScreen";
+import { RegistrationScreen } from "./src/Screens/RegistrationScreen";
+import { Home } from "./src/Screens/Home";
+
+const MainStack = createStackNavigator();
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -19,11 +24,31 @@ export default function App() {
     return null;
   }
 
-  const auth = authorization(null); //TODO Змінити на true для входу на Home
-
   return (
     <NavigationContainer onLayout={onLayoutRootView}>
-      {auth}
+      <MainStack.Navigator initialRouteName="LoginScreen">
+        <MainStack.Screen
+          name="LoginScreen"
+          component={LoginScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <MainStack.Screen
+          name="RegistrationScreen"
+          component={RegistrationScreen}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <MainStack.Screen
+          name="Home"
+          component={Home}
+          options={{
+            headerShown: false,
+          }}
+        />
+      </MainStack.Navigator>
     </NavigationContainer>
   );
 }

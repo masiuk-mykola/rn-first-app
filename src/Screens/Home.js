@@ -29,10 +29,8 @@ export const Home = () => {
           borderTopWidth: 1,
           borderTopColor: "#B3B3B3",
         },
-      }}
-      tabBarOptions={{
-        activeTintColor: "#FF6C00",
-        showLabel: false,
+        tabBarShowLabel: false,
+        tabBarActiveTintColor: "#FF6C00",
       }}
     >
       <Tabs.Screen
