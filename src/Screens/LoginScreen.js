@@ -36,21 +36,6 @@ export const LoginScreen = ({ navigation }) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isShowWarning, setIsShowWarning] = useState(warningState);
 
-  // const [fontsLoaded] = useFonts({
-  //   "Roboto-400": require("../../assets/fonts/Roboto/Roboto-Regular.ttf"),
-  //   "Roboto-500": require("../../assets/fonts/Roboto/Roboto-Medium.ttf"),
-  // });
-
-  // const onLayoutRootView = useCallback(async () => {
-  //   if (fontsLoaded) {
-  //     await SplashScreen.hideAsync();
-  //   }
-  // }, [fontsLoaded]);
-
-  // if (!fontsLoaded) {
-  //   return null;
-  // }
-
   const emailHandler = (email) =>
     setCredentials((prevState) => ({ ...prevState, email }));
   const passwordHandler = (password) =>

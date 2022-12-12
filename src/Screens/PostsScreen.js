@@ -1,7 +1,17 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 
-export const PostsScreen = () => {
+export const PostsScreen = ({ route }) => {
+  console.log("route.params", route.params);
+  // const [posts, setPosts] = useState([]);
+
+  // useEffect(() => {
+  //   if (route.params) {
+  //     setPosts((prevState) => [...prevState, route.params]);
+  //   }
+  // }, [route.params]);
+
+  // console.log(posts);
   return (
     <View
       style={{
@@ -11,7 +21,7 @@ export const PostsScreen = () => {
         backgroundColor: "#fff",
       }}
     >
-      <Text>PostsScreen!</Text>
+      <Text>PostsScreen</Text>
     </View>
   );
 };

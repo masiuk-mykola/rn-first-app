@@ -6,10 +6,15 @@ import { ProfileScreen } from "./ProfileScreen";
 import { CreatePostsScreen } from "./CreatePostsScreen";
 import { StyleSheet, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { MapScreen } from "./MapScreen";
+import { PhotoCamera } from "../components/Camera";
 
 const Tabs = createBottomTabNavigator();
 
 export const Home = () => {
+  const moveBack = () => {
+    console.log("back");
+  };
   return (
     <Tabs.Navigator
       screenOptions={{
@@ -41,9 +46,9 @@ export const Home = () => {
             <Feather name={"grid"} size={size} color={color} />
           ),
           title: "Публикации",
-          headerRight: ({ color, size }) => (
+          headerRight: ({ color }) => (
             <Ionicons
-              style={{ marginRight: 19 }}
+              style={{ marginRight: 20 }}
               name="exit-outline"
               size={24}
               color={color}
@@ -64,6 +69,18 @@ export const Home = () => {
             );
           },
           title: "Создать публикацию",
+          tabBarStyle: {
+            display: "none",
+          },
+          // headerLeft: ({ color }) => (
+          //   <Feather
+          //     style={{ marginLeft: 20 }}
+          //     name="arrow-left"
+          //     size={24}
+          //     color={color}
+          //     onPress={moveBack}
+          //   />
+          // ),
         }}
       />
       <Tabs.Screen
@@ -76,6 +93,16 @@ export const Home = () => {
           headerShown: false,
         }}
       />
+      {/* <Tabs.Screen
+        name="MapScreen"
+        component={MapScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Feather name={"map"} size={size} color={color} />
+          ),
+          headerShown: false,
+        }}
+      /> */}
     </Tabs.Navigator>
   );
 };
