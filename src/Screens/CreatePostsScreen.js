@@ -16,7 +16,7 @@ import * as Location from "expo-location";
 import { Camera, CameraType } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
 import { FontAwesome } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 const initialPost = {
   photo: "",
@@ -27,8 +27,7 @@ const initialPost = {
 
 export const CreatePostsScreen = ({ navigation }) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
-  const [shouldPublish, setShouldPublish] = useState(true);
-  const [photoFromCamera, setPhotoFromCamera] = useState(null);
+  const [shouldPublish, setShouldPublish] = useState(false);
   const [post, setPost] = useState(initialPost);
   const [errorMsg, setErrorMsg] = useState(null);
 
@@ -46,7 +45,7 @@ export const CreatePostsScreen = ({ navigation }) => {
       let location = await Location.getCurrentPositionAsync({});
       setPost((prevState) => ({
         ...prevState,
-        currentLocation: location,
+        currentLocation: location.coords,
       }));
       let text;
       if (errorMsg) {
@@ -81,13 +80,17 @@ export const CreatePostsScreen = ({ navigation }) => {
 
   const photoHandler = (uri) => {
     setPost((prevState) => ({ ...prevState, photo: uri }));
+    setShouldPublish(true);
   };
 
   const inputHandlerTitle = (title) => {
     setPost((prevState) => ({ ...prevState, title }));
+    setShouldPublish(true);
   };
+
   const inputHandlerLocation = (photoLocation) => {
     setPost((prevState) => ({ ...prevState, photoLocation }));
+    setShouldPublish(true);
   };
 
   const onFocusKeyboard = () => {
@@ -96,14 +99,17 @@ export const CreatePostsScreen = ({ navigation }) => {
 
   const onCreate = () => {
     if (shouldPublish) {
-      navigation.navigate("PostsScreen", post);
+      navigation.navigate("DefaultPostScreen", post);
       setPost(initialPost);
-      setPhotoFromCamera(null);
     }
   };
 
   const onDelete = () => {
     setPost(initialPost);
+  };
+
+  const onRemovePhoto = () => {
+    setPost((prevState) => ({ ...prevState, photo: null }));
   };
 
   return (
@@ -156,7 +162,11 @@ export const CreatePostsScreen = ({ navigation }) => {
             </View>
           </View>
           <View style={styles.loadPhoto}>
-            <Text style={styles.loadPhoto_text}>Загрузите фото</Text>
+            <TouchableOpacity onPress={onRemovePhoto}>
+              <Text style={styles.loadPhoto_text}>
+                {post.photo ? "Редактировать фото" : "Загрузите фото"}
+              </Text>
+            </TouchableOpacity>
           </View>
           <View style={styles.inputContainer}>
             <TextInput
@@ -169,8 +179,8 @@ export const CreatePostsScreen = ({ navigation }) => {
               onBlur={() => setIsShowKeyboard(false)}
             />
             <View>
-              <Ionicons
-                name="ios-location-outline"
+              <Feather
+                name="map-pin"
                 size={24}
                 color="#BDBDBD"
                 style={{ position: "absolute" }}
@@ -180,7 +190,7 @@ export const CreatePostsScreen = ({ navigation }) => {
                 onChangeText={inputHandlerLocation}
                 placeholder={"Местность..."}
                 placeholderTextColor={"#BDBDBD"}
-                style={{ ...styles.input, paddingLeft: 24 }}
+                style={{ ...styles.input, paddingLeft: 28 }}
                 onFocus={onFocusKeyboard}
                 onBlur={() => setIsShowKeyboard(false)}
               />

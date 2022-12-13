@@ -6,8 +6,8 @@ import { ProfileScreen } from "./ProfileScreen";
 import { CreatePostsScreen } from "./CreatePostsScreen";
 import { StyleSheet, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { MapScreen } from "./MapScreen";
-import { PhotoCamera } from "../components/Camera";
+// import { MapScreen } from "./nestedScreens/MapScreen";
+// import { PhotoCamera } from "../components/Camera";
 
 const Tabs = createBottomTabNavigator();
 
@@ -42,6 +42,7 @@ export const Home = () => {
         name="PostsScreen"
         component={PostsScreen}
         options={{
+          // headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <Feather name={"grid"} size={size} color={color} />
           ),
@@ -93,7 +94,7 @@ export const Home = () => {
           headerShown: false,
         }}
       />
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="MapScreen"
         component={MapScreen}
         options={{
@@ -102,7 +103,7 @@ export const Home = () => {
           ),
           headerShown: false,
         }}
-      />
+      /> */}
     </Tabs.Navigator>
   );
 };
