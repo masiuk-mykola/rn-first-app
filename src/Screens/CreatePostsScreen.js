@@ -11,12 +11,13 @@ import {
   Button,
   Image,
 } from "react-native";
-import { PhotoCamera } from "../components/Camera";
+
 import * as Location from "expo-location";
 import { Camera, CameraType } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
 import { FontAwesome } from "@expo/vector-icons";
-
+import { Ionicons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 const initialPost = {
   photo: "",
   title: "",
@@ -43,7 +44,10 @@ export const CreatePostsScreen = ({ navigation }) => {
         return;
       }
       let location = await Location.getCurrentPositionAsync({});
-      setPost((prevState) => ({ ...prevState, currentLocation: location }));
+      setPost((prevState) => ({
+        ...prevState,
+        currentLocation: location,
+      }));
       let text;
       if (errorMsg) {
         text = errorMsg;
@@ -98,6 +102,10 @@ export const CreatePostsScreen = ({ navigation }) => {
     }
   };
 
+  const onDelete = () => {
+    setPost(initialPost);
+  };
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -126,7 +134,6 @@ export const CreatePostsScreen = ({ navigation }) => {
                     setCameraRef(ref);
                   }}
                   autoFocus={Camera.Constants.AutoFocus.on}
-                  flashMode={Camera.Constants.FlashMode.on}
                 >
                   <View style={styles.photoView}>
                     <TouchableOpacity
@@ -161,15 +168,23 @@ export const CreatePostsScreen = ({ navigation }) => {
               onFocus={onFocusKeyboard}
               onBlur={() => setIsShowKeyboard(false)}
             />
-            <TextInput
-              value={post.photoLocation}
-              onChangeText={inputHandlerLocation}
-              placeholder={"Местность..."}
-              placeholderTextColor={"#BDBDBD"}
-              style={styles.input}
-              onFocus={onFocusKeyboard}
-              onBlur={() => setIsShowKeyboard(false)}
-            />
+            <View>
+              <Ionicons
+                name="ios-location-outline"
+                size={24}
+                color="#BDBDBD"
+                style={{ position: "absolute" }}
+              />
+              <TextInput
+                value={post.photoLocation}
+                onChangeText={inputHandlerLocation}
+                placeholder={"Местность..."}
+                placeholderTextColor={"#BDBDBD"}
+                style={{ ...styles.input, paddingLeft: 24 }}
+                onFocus={onFocusKeyboard}
+                onBlur={() => setIsShowKeyboard(false)}
+              />
+            </View>
           </View>
           <TouchableOpacity
             style={
@@ -189,6 +204,31 @@ export const CreatePostsScreen = ({ navigation }) => {
               Опубликовать
             </Text>
           </TouchableOpacity>
+
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              alignItems: "flex-end",
+              justifyContent: "center",
+              alignContent: "flex-end",
+              paddingBottom: 34,
+            }}
+          >
+            <TouchableOpacity
+              style={{
+                width: 70,
+                height: 40,
+                backgroundColor: "#F6F6F6",
+                borderRadius: 20,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              onPress={onDelete}
+            >
+              <AntDesign name="delete" size={24} color="#BDBDBD" />
+            </TouchableOpacity>
+          </View>
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
@@ -199,7 +239,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-
   photoContainer: {
     height: 240,
     width: "100%",
@@ -270,66 +309,3 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
 });
-
-{
-  /* <KeyboardAvoidingView
-      behavior={Platform.OS == "ios" ? "padding" : "height"}
-      style={{ flex: 1 }}
-    >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View
-          style={{
-            flex: 1,
-            paddingHorizontal: 16,
-            alignItems: "center",
-            backgroundColor: "#fff",
-          }}
-        >
-          <View style={styles.photoContainer}>
-            <PhotoCamera />
-          </View>
-          <View style={styles.loadPhoto}>
-            <Text style={styles.loadPhoto_text}>Загрузите фото</Text>
-          </View>
-          <View style={styles.inputContainer}>
-            <TextInput
-              value={titleValue}
-              onChangeText={inputHandlerTitle}
-              placeholder={"Название..."}
-              placeholderTextColor={"#BDBDBD"}
-              style={styles.input}
-              onFocus={onFocusKeyboard}
-              onBlur={() => setIsShowKeyboard(false)}
-            />
-            <TextInput
-              value={locationValue}
-              onChangeText={inputHandlerLocation}
-              placeholder={"Местность..."}
-              placeholderTextColor={"#BDBDBD"}
-              style={styles.input}
-              onFocus={onFocusKeyboard}
-              onBlur={() => setIsShowKeyboard(false)}
-            />
-          </View>
-          <TouchableOpacity
-            style={
-              shouldPublish
-                ? styles.btn
-                : { ...styles.btn, backgroundColor: "#F6F6F6" }
-            }
-            onPress={onCreate}
-          >
-            <Text
-              style={
-                shouldPublish
-                  ? styles.btn__text
-                  : { ...styles.btn__text, color: "#BDBDBD" }
-              }
-            >
-              Опубликовать
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>  */
-}

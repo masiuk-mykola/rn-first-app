@@ -93,7 +93,7 @@ export const Home = () => {
           headerShown: false,
         }}
       />
-      {/* <Tabs.Screen
+      <Tabs.Screen
         name="MapScreen"
         component={MapScreen}
         options={{
@@ -102,7 +102,7 @@ export const Home = () => {
           ),
           headerShown: false,
         }}
-      /> */}
+      />
     </Tabs.Navigator>
   );
 };
