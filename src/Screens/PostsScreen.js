@@ -7,34 +7,14 @@ import { MapScreen } from "./nestedScreens/MapScreen";
 const NestedScreens = createStackNavigator();
 export const PostsScreen = () => {
   return (
-    <NestedScreens.Navigator
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
+    <NestedScreens.Navigator>
       <NestedScreens.Screen
         name="DefaultPostScreen"
         component={DefaultPostScreen}
+        options={{ headerShown: false }}
       />
-      <NestedScreens.Screen
-        name="CommentsScreen"
-        component={CommentsScreen}
-        options={
-          {
-            //   headerTitleAlign: "center",
-            //   headerStyle: {
-            //     height: 88,
-            //     borderBottomWidth: 1,
-            //     borderBottomColor: "#B3B3B3",
-            //   },
-            //   headerTitleStyle: {
-            //     fontWeight: "bold",
-            //     lineHeight: 22,
-            //   },
-          }
-        }
-      />
-      {/* <NestedScreens.Screen name="MapScreen" component={MapScreen} /> */}
+      <NestedScreens.Screen name="CommentsScreen" component={CommentsScreen} />
+      <NestedScreens.Screen name="MapScreen" component={MapScreen} />
     </NestedScreens.Navigator>
   );
 };

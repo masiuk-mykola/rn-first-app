@@ -11,7 +11,13 @@ import {
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 
-const Item = ({ title, source, photoLocation, navigation }) => (
+const Item = ({
+  title,
+  source,
+  photoLocation,
+  currentLocation,
+  navigation,
+}) => (
   <View style={styles.item}>
     <Image style={styles.img} source={{ uri: source }} />
     <Text style={styles.title}>{title}</Text>
@@ -49,6 +55,7 @@ const Item = ({ title, source, photoLocation, navigation }) => (
           size={24}
           color="#BDBDBD"
           style={{ marginRight: 9 }}
+          onPress={() => navigation.navigate("MapScreen", currentLocation)}
         />
         <Text style={styles.title}>{photoLocation}</Text>
       </View>
@@ -71,6 +78,7 @@ export const DefaultPostScreen = ({ route, navigation }) => {
       title={item.title}
       source={item.photo}
       photoLocation={item.photoLocation}
+      currentLocation={item.currentLocation}
     />
   );
 
