@@ -1,6 +1,6 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 // import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
+// import * as SplashScreen from "expo-splash-screen";
 
 import React from "react";
 import {
@@ -16,6 +16,8 @@ import {
   Dimensions,
   Image,
 } from "react-native";
+import { useDispatch } from "react-redux";
+import { authSignUpUser } from "../redux/auth/authOperation";
 
 const initialState = {
   login: "",
@@ -37,6 +39,7 @@ export const RegistrationScreen = ({ navigation }) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isShowWarning, setIsShowWarning] = useState(warningState);
 
+  const dispatch = useDispatch();
   // const [fontsLoaded] = useFonts({
   //   "Roboto-400": require("../../assets/fonts/Roboto/Roboto-Regular.ttf"),
   //   "Roboto-500": require("../../assets/fonts/Roboto/Roboto-Medium.ttf"),
@@ -83,7 +86,8 @@ export const RegistrationScreen = ({ navigation }) => {
       credentials.email !== "" ||
       credentials.password !== ""
     ) {
-      navigation.navigate("Home");
+      dispatch(authSignUpUser(credentials));
+      // navigation.navigate("Home");
     }
   };
   const showPassword = () => setIsShowPassword(!isShowPassword);

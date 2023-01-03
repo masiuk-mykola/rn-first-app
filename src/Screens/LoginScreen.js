@@ -1,6 +1,6 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 // import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
+// import * as SplashScreen from "expo-splash-screen";
 
 import React from "react";
 import {
@@ -16,6 +16,8 @@ import {
   Dimensions,
   Image,
 } from "react-native";
+import { useDispatch } from "react-redux";
+import { authSignInUser } from "../redux/auth/authOperation";
 
 const initialState = {
   email: "",
@@ -35,6 +37,8 @@ export const LoginScreen = ({ navigation }) => {
   const [credentials, setCredentials] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isShowWarning, setIsShowWarning] = useState(warningState);
+
+  const dispatch = useDispatch();
 
   const emailHandler = (email) =>
     setCredentials((prevState) => ({ ...prevState, email }));
@@ -60,7 +64,8 @@ export const LoginScreen = ({ navigation }) => {
     Keyboard.dismiss();
 
     if (credentials.email !== "" || credentials.password !== "") {
-      navigation.navigate("Home");
+      dispatch(authSignInUser(credentials));
+      // navigation.navigate("Home");
     }
   };
   const showPassword = () => setIsShowPassword(!isShowPassword);
